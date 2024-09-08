@@ -1,0 +1,92 @@
+[
+{
+	"uri": "//localhost:1313/vi/",
+	"title": "Triển khai ứng dụng Spring Boot CRUD API lên AWS sử dụng Elastic Beanstalk",
+	"tags": [],
+	"description": "",
+	"content": "Triển khai ứng dụng Spring Boot CRUD API lên AWS sử dụng Elastic Beanstalk Tổng quan Sử dụng Elastic Beanstalk của AWS để triển khai ứng dụng Spring Boot CRUD API\nNội dung Giới thiệu Các bước chuẩn bị Cấu hình RDS Dọn dẹp tài nguyên "
+},
+{
+	"uri": "//localhost:1313/vi/2-prerequiste/2.1-createec2/",
+	"title": "Chuẩn bị EC2 Key Pair",
+	"tags": [],
+	"description": "",
+	"content": "Trong bước này, chúng ta sẽ cần tạo một tạo một EC2 Key Pair.\nKey Pair là một cặp khóa mã hóa được sử dụng để truy cập vào EC2 instance thông qua SSH.\nTruy cập vào AWS Management Console. Chuyển đến dịch vụ EC2. Trong phần Network \u0026amp; Security, chọn \u0026ldquo;Key pairs\u0026rdquo;. Chọn Create Key Pair. Đặt tên cho key pair của bạn và chọn định dạng. Chọn vào \u0026ldquo;Create key pair\u0026rdquo; để tạo EC2 Key Pair. Định dạng của key pair bạn chọn sẽ phụ thuộc vào hệ điều hành bạn sử dụng để kết nối với EC2 instance khi triển khai ứng dụng Spring Boot lên AWS.\n.pem (Privacy Enhanced Mail): Định dạng .pem thường được sử dụng trên hệ điều hành Linux và macOS. Các hệ điều hành này hỗ trợ việc sử dụng tệp .pem trực tiếp để kết nối SSH với EC2 instance. Công cụ SSH tích hợp sẵn trên Linux và macOS sẽ sử dụng tệp .pem để xác thực.\n.ppk (PuTTY Private Key): Định dạng .ppk được sử dụng trên hệ điều hành Windows khi bạn sử dụng PuTTY (một trình SSH client phổ biến trên Windows). PuTTY không hỗ trợ tệp .pem trực tiếp, vì vậy bạn sẽ cần chuyển đổi tệp .pem thành .ppk bằng công cụ PuTTYgen\n6. Tải key pair xuống máy tính của bạn. Bạn sẽ cần file này để truy cập vào EC2 instance.\n"
+},
+{
+	"uri": "//localhost:1313/vi/1-introduce/",
+	"title": "Giới thiệu",
+	"tags": [],
+	"description": "",
+	"content": "Đầu tiên, chúng ta cùng tìm hiểu về dịch Elastic Beanstalk của AWS. Elastic Beanstalk là một dịch vụ của Amazon Web Services (AWS) giúp triển khai và quản lý các ứng dụng web một cách dễ dàng mà không cần phải lo lắng về cơ sở hạ tầng bên dưới. Với Elastic Beanstalk, bạn chỉ cần upload mã nguồn ứng dụng của mình, sau đó dịch vụ sẽ tự động xử lý việc triển khai, cung cấp tài nguyên, cân bằng tải, tự động mở rộng và giám sát trạng thái của ứng dụng.\nCác tính năng nổi bật của Elastic Beanstalk bao gồm:\nHỗ trợ nhiều ngôn ngữ: Elastic Beanstalk hỗ trợ nhiều ngôn ngữ và môi trường ứng dụng như Java, .NET, Node.js, PHP, Python, Ruby, Go, và Docker. Quản lý tài nguyên tự động: Dịch vụ sẽ tự động quản lý các tài nguyên cơ bản như EC2 instances, load balancers, scaling policies, và databases. Tích hợp với các dịch vụ AWS khác: Elastic Beanstalk tích hợp tốt với các dịch vụ khác của AWS như RDS, S3, CloudWatch, và nhiều dịch vụ khác. Tuỳ chỉnh dễ dàng: Dù Elastic Beanstalk tự động hóa nhiều phần của quá trình triển khai, bạn vẫn có quyền kiểm soát các cấu hình và tùy chỉnh theo nhu cầu cụ thể. Theo dõi và giám sát: Bạn có thể theo dõi hiệu suất của ứng dụng thông qua bảng điều khiển của Elastic Beanstalk hoặc sử dụng CloudWatch để theo dõi chi tiết hơn. Elastic Beanstalk lý tưởng cho các nhà phát triển muốn tập trung vào việc phát triển ứng dụng mà không cần lo lắng quá nhiều về việc quản lý cơ sở hạ tầng.\n"
+},
+{
+	"uri": "//localhost:1313/vi/3-accessibilitytoinstances/3.1-create-rds/",
+	"title": "Tạo RDS",
+	"tags": [],
+	"description": "",
+	"content": " Truy cập vào giao diện quản trị của dịch vụ Elastic Beanstalk.\nClick chọn Create application. Đặt tên cho Application là CRUD_SpringBoot_Excercise. Chọn Platform Tomcat (hệ thống sẽ gợi ý cho 2 mục Platform branch và Platform version) rồi click vào Next ở cuối màn hình. Click Next để tiếp tục ở bước 2. Chọn vào mục \u0026ldquo;Create and use new service role\u0026rdquo;. Tiếp theo ta chọn EC2 Key Pair và EC2 instance profile là những EC2 Key Pair và Instance Profile chúng ta đã tạo ở mục 2. Click Next để tiếp tục qua bước 3. Tại bước 3 (Set up networking, database and tags - optional), kéo xuống phần Database, click vào Enable database, chọn engine phù hợp (ở đây mình sẽ chọn postgres), cài đặt tài khoản và mật khẩu của user trên server database của chúng ta. Click Next tiếp tục cho tới bước 6 và submit, chúng ta đã tạo xong 1 application mới ở Elastic Beanstalk. Đồng thời cùng lúc 1 môi trường mới cũng được tạo cho application đó, sẽ mất 1 thời gian để môi trường có thể chạy xong và Application mới hoạt động được.\nHệ thống hiện ra như sau thì đã tạo thành công Application. Tại màn hình đó, ở mục Creating RDS database name là một chuỗi mã, chúng ta sẽ dựa vào mã này - chính là tên của RDS để Public RDS trong bước sau\nTruy cập vào giao diện quản trị của dịch vụ EC2.\nClick chọn Public Linux Instance. Click Actions. Click Security. Click Modify IAM role. Tại trang Modify IAM role. Click chọn SSM-Role. Click Save. Bạn sẽ cần chờ khoảng 10 phút trước khi thực hiện bước tiếp theo. Thời gian này EC2 instance của chúng ta sẽ tự động đăng ký với Session Manager.\nTruy cập vào giao diện quản trị của dịch vụ AWS Systems Manager Kéo thanh trượt menu bên trái xuống dưới. Click Session Manager. Click Start Session. Sau đó chọn Public Linux Instance và click Start session để truy cập vào instance. Terminal sẽ xuất hiện trên trình duyệt. Kiểm tra với câu lệnh sudo tcpdump -nn port 22 và sudo tcpdump chúng ta sẽ thấy không có traffic của SSH mà chỉ có traffic HTTPS. Ở trên, chúng ta đã tạo kết nối vào public instance mà không cần mở cổng SSH 22, giúp cho việc bảo mật tốt hơn, tránh mọi sự tấn công tới cổng SSH.\nMột nhược điểm của cách làm trên là ta phải mở Security Group outbound ở cổng 443 ra ngoài internet. Vì là public instance nên có thể sẽ không vấn đề gì nhưng nếu bạn muốn bảo mật hơn nữa, bạn có thể khoá cổng 443 ra ngoài internet mà vẫn sử dụng được Session Manager. Chúng ta sẽ đi qua cách làm này ở phần private instance dưới đây.\nBạn có thể terminate để kết thúc session đang kết nối trước khi qua bước tiếp theo.\n"
+},
+{
+	"uri": "//localhost:1313/vi/2-prerequiste/",
+	"title": "Các bước chuẩn bị",
+	"tags": [],
+	"description": "",
+	"content": "\rBạn cần chuẩn bị sẵn một project Spring Boot CRUD API hoạt động được để đưa dự án lên AWS\nTrong bước này, chúng ta cần tạo EC2 Key Pair và Instance Profile. Khi triển khai một ứng dụng với Elastic Beanstalk, việc tạo key pair và instance profile cho EC2 là rất quan trọng để bạn có thể truy cập và quản lý các tài nguyên được tạo.\nNội dung Chuẩn bị EC2 Key Pair Tạo Instance Profile "
+},
+{
+	"uri": "//localhost:1313/vi/3-accessibilitytoinstances/3.2-private-instance/",
+	"title": "Public RDS",
+	"tags": [],
+	"description": "",
+	"content": "Ở bước này chúng ta sẽ thiết lập RDS với quyền truy cập \u0026ldquo;Anywhere IPv4\u0026rdquo;. Thiết lập RDS với quyền truy cập \u0026ldquo;Anywhere IPv4\u0026rdquo; (0.0.0.0/0) cho phép mọi địa chỉ IP có thể truy cập cơ sở dữ liệu của bạn từ Internet. Điều này hữu ích khi bạn cần kết nối từ bên ngoài AWS, như trong quá trình phát triển hoặc kiểm thử.\nTuy nhiên, nó tiềm ẩn nhiều rủi ro bảo mật, như tấn công brute force. Trong môi trường sản xuất, nên hạn chế quyền truy cập bằng cách chỉ cho phép IP cụ thể hoặc sử dụng VPN/SSH Tunnel để bảo vệ kết nối.\nCác bước thực hiện:\nTruy cập vào giao diện quản trị của dịch vụ quản trị RDS. Ở thanh menu bên trái, click chọn Database. Trượt xuống mục Security group rules, chọn vào security group có dạng là EC2 Sercurity Group - Inbound. Tại màn hình Security Groups, click chọn vào Security Group duy nhất hiện trên màn hình. Chúng ta có thể kiểm tra nó có phải đúng RDS mà mình đã tạo hay không bằng cách nhìn vào Security group name, bỏ đi 3 chữ \u0026ldquo;rds\u0026rdquo; ở đầu, sau đó chính là RDS name của chúng ta đã tạo ở các bước trước. Ở màn hình hiện ra tiếp theo, chọn vào Security group rule duy nhất trên màn hình, chọn vào Edit inbound rules. Hệ thống hiện ra màn hình tùy chỉnh, click chọn Delete để xóa Security group rule ban đầu và click vào Add rule để thêm mới. Chọn Type là PostgreSQL và Source là Anywhere IPv4. Click chọn Save Rules để hoàn thành Hệ thống hiện ra như sau thì đã public thành công RDS của chúng ta . "
+},
+{
+	"uri": "//localhost:1313/vi/2-prerequiste/2.2-createiamrole/",
+	"title": "Tạo Instance Profile",
+	"tags": [],
+	"description": "",
+	"content": "Tạo Instance Profile Trong bước này chúng ta sẽ tiến hành tạo Instance Profile. Instance Profile cho phép EC2 instance của bạn truy cập vào các tài nguyên AWS khác như S3, RDS, hoặc DynamoDB.\nTruy cập vào giao diện quản trị dịch vụ IAM Ở thanh điều hướng bên trái, click Roles. Click Create role. Click AWS service và chọn Service là EC2. Click Next. Trong ô Search, điền AmazonS3FullAccess và ấn phím Enter để tìm kiếm policy này. Click chọn policy AmazonS3FullAccess. Click Next Đặt tên cho Role là ElasticBeanstalk-EC2-Role ở Role Name Click Create Role . Vậy các bước chuẩn bị đã xong, chúng ta tiến hàng tạo RDS cho dự án Spring Boot.\n"
+},
+{
+	"uri": "//localhost:1313/vi/3-accessibilitytoinstances/",
+	"title": "Cấu hình RDS",
+	"tags": [],
+	"description": "",
+	"content": "Bước đầu tiên, chúng ta sẽ cấu hình RDS trên AWS cho dự án Spring Boot.\nAmazon RDS (Relational Database Service) là dịch vụ quản lý cơ sở dữ liệu quan hệ trên đám mây của AWS.\nNó cung cấp:\nQuản lý tự động: Sao lưu, cập nhật, và vá lỗi tự động. Khả năng mở rộng: Thay đổi kích thước instance và dung lượng lưu trữ dễ dàng. Tính khả dụng cao: Sao lưu tự động và triển khai dự phòng. Bảo mật: Mã hóa dữ liệu và kiểm soát truy cập. Tính tương thích: Hỗ trợ MySQL, PostgreSQL, MariaDB, Oracle, và SQL Server. Giám sát dễ dàng: Tích hợp với CloudWatch để theo dõi hiệu suất. Nội dung 3.1. Tạo RDS\n3.2. Public RDS 3.3. Gán link RDS vào Project 3.4. Upload Project lên AWS\n"
+},
+{
+	"uri": "//localhost:1313/vi/3-accessibilitytoinstances/3.3-public-instance/",
+	"title": "Gán link RDS vào Project",
+	"tags": [],
+	"description": "",
+	"content": "Ở bước này chúng ta sẽ thiết lập RDS với quyền truy cập \u0026ldquo;Anywhere IPv4\u0026rdquo;. Thiết lập RDS với quyền truy cập \u0026ldquo;Anywhere IPv4\u0026rdquo; (0.0.0.0/0) cho phép mọi địa chỉ IP có thể truy cập cơ sở dữ liệu của bạn từ Internet. Điều này hữu ích khi bạn cần kết nối từ bên ngoài AWS, như trong quá trình phát triển hoặc kiểm thử.\nTuy nhiên, nó tiềm ẩn nhiều rủi ro bảo mật, như tấn công brute force. Trong môi trường sản xuất, nên hạn chế quyền truy cập bằng cách chỉ cho phép IP cụ thể hoặc sử dụng VPN/SSH Tunnel để bảo vệ kết nối.\nCác bước thực hiện:\nTruy cập vào giao diện quản trị của dịch vụ quản trị Elastic Beanstalk. Ở thanh menu bên trái, click chọn vào môi trường đã được tạo có tên là CRUD_SpringBoot_Excercise. Chọn vào mục Configuration Trượt xuống mục Networking and database, chọn vào Edit. Tiếp theo trượt xuống mục Database, chúng ta sẽ thấy endpoint của database chúng ta đã tạo, copy đường dẫn đó. Truy cập vào Project Spring Boot của chúng ta đã chuẩn bị, vào phần application.properties của project, thay đổi localhost:5432 thành đường dẫn endpoint chúng ta đã copy ở bước trước. Tại bước này, chúng ta đã xong gán link RDS cho project nhưng chúng ta sẽ thực hiện thêm 1 số thao tác để hoàn chỉnh. Truy cập vào pgAdmin4. pgAdmin4 là một công cụ quản lý cơ sở dữ liệu PostgreSQL với giao diện đồ họa. Nó giúp quản lý cơ sở dữ liệu, bảng, và các đối tượng khác dễ dàng, đồng thời cung cấp trình quản lý truy vấn để chạy các lệnh SQL một cách trực quan. Tại thanh menu bên trái, click chuột phải vào Server, chọn Register, Server. Nhập tên của Server, chuyển qua tab Connection, thêm hostname là endpoint database của chúng ta đã copy, nhập username và password đã cài đặt vào, nhấn Save để hệ thống kết nối vào user của database server của chúng ta. Click phải chuột vào Server vừa kết nối, chọn Create, Database vào tạo 1 database có tên excercise đúng với database đã cấu hình ở project, nhấp Save để lưu database. Quay trở lại project, trước khi khởi chạy project để khởi tạo các table vào database chúng ta kết nối thì cần chỉnh spring.jpa.hibernate.ddl-auto=update thành spring.jpa.hibernate.ddl-auto=create. Chạy Project để hệ thống tạo các table. Sau khi khởi chạy xong, chúng ta sẽ tiến hành nén file .war để có thể upload và deploy nó lên AWS. Tại thanh menu bên phải, nhấp vào biểu tượng logo của maeven, nhấp tiếp vào Lifecycle, sau khi màn hình sổ xuống, nháy đúp vào package, hệ thống sẽ tiến hành đóng gói Project thành file .war. Sau khi đóng gói thành công thì sẽ hiện màn hình như thế này cùng với đường dẫn tới file .war đã đóng gói. "
+},
+{
+	"uri": "//localhost:1313/vi/4-cleanup/",
+	"title": "Dọn dẹp tài nguyên  ",
+	"tags": [],
+	"description": "",
+	"content": "Chúng ta sẽ tiến hành các bước sau để xóa các tài nguyên chúng ta đã tạo trong bài thực hành này.\nXóa Elastic Beanstalk Application Truy cập giao diện quản trị dịch vụ Elastic Beanstalk. Click tab Aplication. Click chọn vào Application cần xóa CRUD_SpringBoot_Exercise. Click chọn Action click chọn Delete Action Xóa EC2 Key Pair và EC2 Instance Profile Truy cập giao diện EC2 Key Pair. Click chọn vào Key Pair cần xóa EC2_RODNGO. Click chọn Action click chọn Delete Truy cập giao diện quản trị dịch vụ IAM Click Roles. Click chọn vào các Roles cần xóa. Click Delete. "
+},
+{
+	"uri": "//localhost:1313/vi/3-accessibilitytoinstances/3.4-upload_deploy/",
+	"title": "Upload Project lên AWS",
+	"tags": [],
+	"description": "",
+	"content": " Truy cập vào giao diện quản trị của dịch vụ quản trị Elastic Beanstalk. Chọn Upload and deploy Chọn file từ đường dẫn file .war ở Project chúng ta đã đóng gói và đặt tên cho version của nó. Nhấp vào Deploy. Đợi 1 vài phút để hệ thống tải file .war lên AWS Hệ thống hiện ra như sau thì đã deploy thành công dự án Spring Boot của chúng ta lên AWS. "
+},
+{
+	"uri": "//localhost:1313/vi/categories/",
+	"title": "Categories",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "//localhost:1313/vi/tags/",
+	"title": "Tags",
+	"tags": [],
+	"description": "",
+	"content": ""
+}]
